@@ -18,11 +18,8 @@ public class RentServiceTest extends TestCase {
       } catch (Exception ex) {
         actualException = ex.getMessage();
       }
-      if (testCase.exceptionMessage == null) {
-        assertTrue(testCase.message, RentalAgreement.equal(testCase.expected, actual));
-      } else {
-        assertEquals(testCase.message, testCase.exceptionMessage, actualException);
-      }
+      assertTrue(testCase.message, RentalAgreement.equal(testCase.expected, actual));
+      assertEquals(testCase.message, testCase.exceptionMessage, actualException);
     }
   }
 
@@ -33,21 +30,41 @@ public class RentServiceTest extends TestCase {
     testCase = new RentToolTestCase();
     testCase.message = "Exception thrown for bad percentage";
     testCase.toolCode = "JAKR";
-    testCase.checkoutDate = "9/3/15";
+    testCase.checkoutDate = "09/03/15";
     testCase.rentalDays = 5;
     testCase.discount = 101;
     testCase.expected = null; // because an exception is thrown
     testCase.exceptionMessage = "Invalid Discount: must be a whole percent between 0 and 100.";
     testSet.add(testCase);
+    // custom: test exception for bad number of days
+    testCase = new RentToolTestCase();
+    testCase.message = "Exception thrown for bad rental day count";
+    testCase.toolCode = "JAKR";
+    testCase.checkoutDate = "09/03/15";
+    testCase.rentalDays = 0;
+    testCase.discount = 0;
+    testCase.expected = null; // because an exception is thrown
+    testCase.exceptionMessage = "Invalid Rental Day Count: must be a postive whole number.";
+    testSet.add(testCase);
+    // custom: exception for bad date
+    testCase = new RentToolTestCase();
+    testCase.message = "Exception thrown for bad date";
+    testCase.toolCode = "JAKR";
+    testCase.checkoutDate = "200-200-200";
+    testCase.rentalDays = 1;
+    testCase.discount = 0;
+    testCase.expected = null; // because an exception is thrown
+    testCase.exceptionMessage = "Unparseable date: \"200-200-200\"";
+    testSet.add(testCase);
     // test 2
     testCase = new RentToolTestCase();
     testCase.message = "Labor Day, Rigid Jackhammer";
     testCase.toolCode = "LADW";
-    testCase.checkoutDate = "9/3/15";
+    testCase.checkoutDate = "09/03/15";
     testCase.rentalDays = 5;
     testCase.discount = 10;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "9/8/15";
+    testCase.expected.dueDate = "09/08/15";
     testCase.expected.dailyCharge = "$1.99";
     testCase.expected.chargeDays = 5;
     testCase.expected.preDiscountCharge = "$9.95";
@@ -60,11 +77,11 @@ public class RentServiceTest extends TestCase {
     testCase = new RentToolTestCase();
     testCase.message = "Fourth of July on Saturday, Chainsaw";
     testCase.toolCode = "CHNS";
-    testCase.checkoutDate = "7/2/15";
+    testCase.checkoutDate = "07/02/15";
     testCase.rentalDays = 5;
     testCase.discount = 25;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "7/15/15";
+    testCase.expected.dueDate = "07/015/15";
     testCase.expected.dailyCharge = "$1.49";
     testCase.expected.chargeDays = 3;
     testCase.expected.preDiscountCharge = "$4.47";
@@ -77,11 +94,11 @@ public class RentServiceTest extends TestCase {
     testCase = new RentToolTestCase();
     testCase.message = "Labor Day, DeWalt Jackhammer, no discount";
     testCase.toolCode = "JACKD";
-    testCase.checkoutDate = "9/3/15";
+    testCase.checkoutDate = "09/03/15";
     testCase.rentalDays = 6;
     testCase.discount = 0;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "9/9/15";
+    testCase.expected.dueDate = "09/09/15";
     testCase.expected.dailyCharge = "$2.99";
     testCase.expected.chargeDays = 3;
     testCase.expected.preDiscountCharge = "$8.97";
@@ -94,11 +111,11 @@ public class RentServiceTest extends TestCase {
     testCase = new RentToolTestCase();
     testCase.message = "Fourth of July, Rigid Jackhammer, no discount";
     testCase.toolCode = "JACKR";
-    testCase.checkoutDate = "7/2/15";
+    testCase.checkoutDate = "07/02/15";
     testCase.rentalDays = 9;
     testCase.discount = 0;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "7/11/15";
+    testCase.expected.dueDate = "07/011/15";
     testCase.expected.dailyCharge = "$2.99";
     testCase.expected.chargeDays = 5;
     testCase.expected.preDiscountCharge = "$14.95";
@@ -111,11 +128,11 @@ public class RentServiceTest extends TestCase {
     testCase = new RentToolTestCase();
     testCase.message = "Fourth of July, future";
     testCase.toolCode = "JACKR";
-    testCase.checkoutDate = "7/2/20";
+    testCase.checkoutDate = "07/02/20";
     testCase.rentalDays = 4;
     testCase.discount = 50;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "7/6/15";
+    testCase.expected.dueDate = "07/06/15";
     testCase.expected.dailyCharge = "$2.99";
     testCase.expected.chargeDays = 1;
     testCase.expected.preDiscountCharge = "$2.99";
