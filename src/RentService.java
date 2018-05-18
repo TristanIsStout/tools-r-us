@@ -19,10 +19,9 @@ public class RentService {
     if (rentalDayCount < 1) {
       throw new Exception("Invalid Rental Day Count: must be a postive whole number.");
     }
-    if (toolCode != "JAKR" && toolCode != "JAKD" && toolCode != "CHNS" && toolCode != "LADW") {
-      throw new Exception("Unkown tool code");
-    }
     RentalAgreement rentalAgreement = new RentalAgreement();
+    // Tool code, type, and brand, with param validation
+    rentalAgreement.setToolProperties(toolCode);
     // formatters
     DateFormat df = new SimpleDateFormat("MM/dd/yy");
     Locale locale = new Locale("en", "US");

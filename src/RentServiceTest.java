@@ -59,14 +59,27 @@ public class RentServiceTest extends TestCase {
     testCase.expected = null; // because an exception is thrown
     testCase.exceptionMessage = "Unparseable date: \"200-200-200\"";
     testSet.add(testCase);
+    // custom: exception for bad tool code
+    testCase = new RentToolTestCase();
+    testCase.message = "Exception thrown for bad date";
+    testCase.toolCode = "JACKR";
+    testCase.checkoutDate = "09/03/15";
+    testCase.rentalDays = 1;
+    testCase.discount = 0;
+    testCase.expected = null; // because an exception is thrown
+    testCase.exceptionMessage = "Unknown tool code";
+    testSet.add(testCase);
     // test 2
     testCase = new RentToolTestCase();
-    testCase.message = "Labor Day, Rigid Jackhammer";
+    testCase.message = "Labor Day, Ladder";
     testCase.toolCode = "LADW";
     testCase.checkoutDate = "09/03/15";
     testCase.rentalDays = 5;
     testCase.discount = 10;
     testCase.expected = new RentalAgreement();
+    testCase.expected.toolCode = "LADW";
+    testCase.expected.toolType = "Ladder";
+    testCase.expected.toolBrand = "Werner";
     testCase.expected.dueDate = "09/08/15";
     testCase.expected.dailyCharge = "$1.99";
     testCase.expected.chargeDays = 5;
@@ -84,6 +97,9 @@ public class RentServiceTest extends TestCase {
     testCase.rentalDays = 5;
     testCase.discount = 25;
     testCase.expected = new RentalAgreement();
+    testCase.expected.toolCode = "CHNS";
+    testCase.expected.toolType = "Chainsaw";
+    testCase.expected.toolBrand = "Stihl";
     testCase.expected.dueDate = "07/07/15";
     testCase.expected.dailyCharge = "$1.49";
     testCase.expected.chargeDays = 3;
@@ -101,6 +117,9 @@ public class RentServiceTest extends TestCase {
     testCase.rentalDays = 6;
     testCase.discount = 0;
     testCase.expected = new RentalAgreement();
+    testCase.expected.toolCode = "JAKD";
+    testCase.expected.toolType = "Jackhammer";
+    testCase.expected.toolBrand = "DeWalt";
     testCase.expected.dueDate = "09/09/15";
     testCase.expected.dailyCharge = "$2.99";
     testCase.expected.chargeDays = 3;
@@ -118,9 +137,11 @@ public class RentServiceTest extends TestCase {
     testCase.rentalDays = 9;
     testCase.discount = 0;
     testCase.expected = new RentalAgreement();
+    testCase.expected.toolCode = "JAKR";
+    testCase.expected.toolType = "Jackhammer";
+    testCase.expected.toolBrand = "Ridgid";
     testCase.expected.dueDate = "07/11/15";
     testCase.expected.dailyCharge = "$2.99";
-    // TODO: this doesn't match the spec
     testCase.expected.chargeDays = 5;
     testCase.expected.preDiscountCharge = "$14.95";
     testCase.expected.discountPercent = "0%";
@@ -136,6 +157,9 @@ public class RentServiceTest extends TestCase {
     testCase.rentalDays = 4;
     testCase.discount = 50;
     testCase.expected = new RentalAgreement();
+    testCase.expected.toolCode = "JAKR";
+    testCase.expected.toolType = "Jackhammer";
+    testCase.expected.toolBrand = "Ridgid";
     testCase.expected.dueDate = "07/06/20";
     testCase.expected.dailyCharge = "$2.99";
     testCase.expected.chargeDays = 1;
