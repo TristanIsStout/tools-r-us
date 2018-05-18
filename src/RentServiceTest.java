@@ -1,6 +1,5 @@
 package test;
 
-import java.util.List;
 import java.util.ArrayList;
 import junit.framework.TestCase;
 
@@ -26,8 +25,8 @@ public class RentServiceTest extends TestCase {
     }
   }
 
-  private List<RentToolTestCase> getRentToolTestSet() {
-    List<RentToolTestCase> testSet = new ArrayList();
+  private ArrayList<RentToolTestCase> getRentToolTestSet() {
+    ArrayList<RentToolTestCase> testSet = new ArrayList<RentToolTestCase>();
     RentToolTestCase testCase;
     // test 1
     testCase = new RentToolTestCase();
