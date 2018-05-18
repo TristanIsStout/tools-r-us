@@ -1,12 +1,17 @@
 package rent;
 
-import java.util.HashMap;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.Locale;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.text.NumberFormat;
+
+/**
+ * NOTE: for enterprise solutions, using an interface, dependency injection, and a 
+ * factory would be ideal. Also, methods like 'isHoliday' could be moved to a util
+ * or date service. These seemed like overkill, so I wrote static functional methods
+ * instead.
+ */
 
 public class RentService {
   
@@ -23,15 +28,15 @@ public class RentService {
     // Tool code, type, and brand, with param validation
     rentalAgreement.setToolProperties(toolCode);
     // formatters
-    DateFormat df = new SimpleDateFormat("MM/dd/yy");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
     Locale locale = new Locale("en", "US");
     NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
     // due date
-    Date checkout = df.parse(checkoutDate);
+    Date checkout = dateFormat.parse(checkoutDate);
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(checkout);
     calendar.add(Calendar.DATE, rentalDayCount);
-    rentalAgreement.dueDate = df.format(calendar.getTime());
+    rentalAgreement.dueDate = dateFormat.format(calendar.getTime());
     // daily charge
     double dailyCharge = getDailyCharge(toolCode);
     rentalAgreement.dailyCharge = currencyFormatter.format(dailyCharge);
