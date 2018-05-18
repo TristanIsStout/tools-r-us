@@ -1,15 +1,18 @@
 package test;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 import junit.framework.TestCase;
-import rent.*;
+
+import rent.RentalAgreement;
+import rent.RentService;
 
 public class RentServiceTest extends TestCase {
 
   public void testRentTool() {
     RentalAgreement actual;
     String actualException;
-    for (RentToolTestCase testCase : makeRentToolTestSet()) {
+    for (RentToolTestCase testCase : getRentToolTestSet()) {
       actual = null;
       actualException = null;
       try {
@@ -23,7 +26,7 @@ public class RentServiceTest extends TestCase {
     }
   }
 
-  private List<RentToolTestCase> makeRentToolTestSet() {
+  private List<RentToolTestCase> getRentToolTestSet() {
     List<RentToolTestCase> testSet = new ArrayList();
     RentToolTestCase testCase;
     // test 1
@@ -81,7 +84,7 @@ public class RentServiceTest extends TestCase {
     testCase.rentalDays = 5;
     testCase.discount = 25;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "07/015/15";
+    testCase.expected.dueDate = "07/07/15";
     testCase.expected.dailyCharge = "$1.49";
     testCase.expected.chargeDays = 3;
     testCase.expected.preDiscountCharge = "$4.47";
@@ -93,7 +96,7 @@ public class RentServiceTest extends TestCase {
     // test 4
     testCase = new RentToolTestCase();
     testCase.message = "Labor Day, DeWalt Jackhammer, no discount";
-    testCase.toolCode = "JACKD";
+    testCase.toolCode = "JAKD";
     testCase.checkoutDate = "09/03/15";
     testCase.rentalDays = 6;
     testCase.discount = 0;
@@ -110,13 +113,14 @@ public class RentServiceTest extends TestCase {
     // test 5
     testCase = new RentToolTestCase();
     testCase.message = "Fourth of July, Rigid Jackhammer, no discount";
-    testCase.toolCode = "JACKR";
+    testCase.toolCode = "JAKR";
     testCase.checkoutDate = "07/02/15";
     testCase.rentalDays = 9;
     testCase.discount = 0;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "07/011/15";
+    testCase.expected.dueDate = "07/11/15";
     testCase.expected.dailyCharge = "$2.99";
+    // TODO: this doesn't match the spec
     testCase.expected.chargeDays = 5;
     testCase.expected.preDiscountCharge = "$14.95";
     testCase.expected.discountPercent = "0%";
@@ -127,12 +131,12 @@ public class RentServiceTest extends TestCase {
     // test 6
     testCase = new RentToolTestCase();
     testCase.message = "Fourth of July, future";
-    testCase.toolCode = "JACKR";
+    testCase.toolCode = "JAKR";
     testCase.checkoutDate = "07/02/20";
     testCase.rentalDays = 4;
     testCase.discount = 50;
     testCase.expected = new RentalAgreement();
-    testCase.expected.dueDate = "07/06/15";
+    testCase.expected.dueDate = "07/06/20";
     testCase.expected.dailyCharge = "$2.99";
     testCase.expected.chargeDays = 1;
     testCase.expected.preDiscountCharge = "$2.99";

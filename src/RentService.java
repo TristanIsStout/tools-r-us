@@ -3,8 +3,10 @@ package rent;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Locale;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 
 public class RentService {
   
@@ -17,35 +19,55 @@ public class RentService {
     if (rentalDayCount < 1) {
       throw new Exception("Invalid Rental Day Count: must be a postive whole number.");
     }
-    DateFormat df = new SimpleDateFormat("MM/dd/yy");
-    Date checkout = df.parse(checkoutDate);
-    double dailyCharge = getDailyCharge(toolCode);
-    int chargeDays = getChargeDays(toolCode, checkout, rentalDayCount);
-
+    if (toolCode != "JAKR" && toolCode != "JAKD" && toolCode != "CHNS" && toolCode != "LADW") {
+      throw new Exception("Unkown tool code");
+    }
     RentalAgreement rentalAgreement = new RentalAgreement();
-    rental
+    // formatters
+    DateFormat df = new SimpleDateFormat("MM/dd/yy");
+    Locale locale = new Locale("en", "US");
+    NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+    // due date
+    Date checkout = df.parse(checkoutDate);
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(checkout);
+    calendar.add(Calendar.DATE, rentalDayCount);
+    rentalAgreement.dueDate = df.format(calendar.getTime());
+    // daily charge
+    double dailyCharge = getDailyCharge(toolCode);
+    rentalAgreement.dailyCharge = currencyFormatter.format(dailyCharge);
+    // charge days
+    int chargeDays = getChargeDays(toolCode, checkout, rentalDayCount);
+    rentalAgreement.chargeDays = chargeDays;
+    // prediscount charge
+    double preDiscountCharge = Math.round(dailyCharge * chargeDays * 100) / 100.0;
+    rentalAgreement.preDiscountCharge = currencyFormatter.format(preDiscountCharge);
+    rentalAgreement.discountPercent = "" + discountPercent + "%";
+    // discount amount
+    double discountAmount = Math.round(dailyCharge * chargeDays * discountPercent) / 100.0;
+    rentalAgreement.discountAmount = currencyFormatter.format(discountAmount);
+    // final charge
+    rentalAgreement.finalCharge  = currencyFormatter.format(preDiscountCharge - discountAmount);
     return rentalAgreement;
   }
 
   public static double getDailyCharge(String toolCode) throws Exception {
-    switch (toolCode) {
-      case "LADW":
-        return 1.99;
-      case "CHNS":
-        return 1.49;
-      case "JAKR":
-      case "JAKD":
-        return 2.99;
-      default:
-        throw new Exception("Unknown toolcode");
+    if (toolCode ==  "LADW") {
+      return 1.99;
+    } else if (toolCode == "CHNS") {
+      return 1.49;
+    } else if (toolCode == "JAKD" || toolCode == "JAKR") {
+      return 2.99;
+    } else {
+      throw new Exception("Unkown tool code");
     }
   }
 
-  public static int getChargeDays(String toolCode, Date checkout, int rentalDayCount
-  ) throws Exception {
+  public static int getChargeDays(String toolCode, Date checkout, int rentalDayCount) {
     int chargeDays = 0;
     Calendar calendar = Calendar.getInstance();
-    for (int index = 0; index < rentalDayCount; index++) {
+    // checkout day not included, rent period starts one day after
+    for (int index = 1; index <= rentalDayCount; index++) {
       calendar.setTime(checkout);
       calendar.add(Calendar.DATE, index);
       // always charge for ladders
@@ -58,7 +80,6 @@ public class RentService {
         chargeDays++;
       }
     }
-    System.out.println("hello " + chargeDays);
     return chargeDays;
   }
 
@@ -84,6 +105,7 @@ public class RentService {
         return true;
       }
     }
+    // labor day is the first monday of september
     if (calendar.get(Calendar.MONTH) == Calendar.SEPTEMBER &&
         calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY &&
         calendar.get(Calendar.DAY_OF_MONTH) < 8) {
