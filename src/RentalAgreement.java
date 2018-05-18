@@ -36,7 +36,10 @@ public class RentalAgreement {
   }
 
   public String toString() {
-    return "dueDate: " + dueDate + "\n" +
+    return "tooolCode: " + toolCode + "\n" +
+           "tooolType: " + toolType + "\n" +
+           "tooolBrand: " + toolBrand + "\n" +
+           "dueDate: " + dueDate + "\n" +
            "dailyCharge: " + dailyCharge + "\n" +
            "chargeDays: " + chargeDays + "\n" +
            "preDiscountCharge: " + preDiscountCharge + "\n" +
